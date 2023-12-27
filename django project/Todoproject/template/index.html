@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        .main{
+            height: 100px;
+            background-color: blue;
+            text-align: center;
+            font-size: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+    <h1>
+        Welcome to Bhaktapur Nepal
+    </h1>
+    </div>
+       <table border="1px" cellpadding="15px">  
+            <thead>
+                <tr>
+                    <th> Name </th>
+                    <th> Descriptions</th>
+                    <th>Status</th>
+                </tr>
+            {% for n in todos %}
+                <tr>
+                    <td>{{n.name}}</td>
+                    <td>{{n.description}}</td>
+                    <td>{{n.status}}</td>
+                </tr>
+            {% endfor %}
+            </thead>
+    </table>
+</body>
+</html>
