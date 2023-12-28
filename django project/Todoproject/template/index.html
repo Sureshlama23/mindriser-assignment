@@ -20,21 +20,26 @@
         Welcome to Bhaktapur Nepal
     </h1>
     </div>
-       <table border="1px" cellpadding="15px">  
+    <br>
+       <table border="1px" cellpadding="15px" width="100%">  
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th> Name </th>
                     <th> Descriptions</th>
                     <th>Status</th>
                 </tr>
-            {% for n in todos %}
+            </thead>
+            <tbody>
+            {% for todo in todos %}
                 <tr>
-                    <td>{{n.name}}</td>
-                    <td>{{n.description}}</td>
-                    <td>{{n.status}}</td>
+                    <td>{{todo.id}}</td>
+                    <td>{{todo.name}}</td>
+                    <td>{{todo.description}}</td>
+                    <td>{{todo.status}}</td>
                 </tr>
             {% endfor %}
-            </thead>
+            </tbody>
     </table>
 </body>
 </html>

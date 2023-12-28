@@ -5,5 +5,8 @@ from .models import Todoproject
 # Create your views here.
 def home(request):
     todos = Todoproject.objects.all()
-    print(todos)
-    return render(request,'index.html')
+    content = {'todos': todos}
+    return render(request,'index.html',context=content)
+
+def create(request):
+    return render(request,'create.html')
