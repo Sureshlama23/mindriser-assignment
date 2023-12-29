@@ -2,56 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Form</title>
-    <style>
-        #text{
-            width: 25%;
-            font-size: 20px;
-
-        }
-        #text2{
-            width: 500px;
-            height: 80px;
-            font-size: 20px;
-        }
-        .fieldset{
-            background-color: white;
-        }
-        .legend{
-            font-size: 20px;
-            padding-left: 10px;
-            padding-right: 10px;
-            color: blue;
-        }
-    </style>
+    <title>Create Form </title>
 </head>
 <body>
-    <div>
-        <form>
-            <fieldset class="fieldset">
-                <legend class="legend"> Create Form </legend>
-                <div id="text">
-                Name: <input type="text" name="name"/>
-                </div>
-                <br/>
-                <div id="text2">
-                Description: <br><textarea name="description" id="text2">                
-                </textarea>
-                </div>
-                <br/>
-                <br/>
-                <select>
-                    <option> Select Status </option>
+    <div class="container mt-5">
+        <form class="col-6 mx-auto card p-3 shadow-lg" method="post">
+            {% csrf_token %}
+            <h2> Todo Task Form </h2>
+            <hr>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label"> Name </label>
+              <input type="text" class="form-control" required name="name">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Description</label>
+              <textarea class="form-control" required name="description"></textarea>
+            </div>
+            <div class="mb-3" >
+              <label for="status">Status</label>
+                <select name="status" class="form-label" aria-label="Floating label select example">
                     <option value="Done"> Done </option>
-                    <option value="In progress" selected> In progress </option> 
-                    <option value="Not done "> Not done </option>
+                    <option value="In progress" selected> In progress </option>
+                    <option value="Not done"> Not done </option>
                 </select>
-                 <br/>
-                <br/>
-                <button onclick> Submit </button>
-            </fieldset>
-        </form>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        
+
+
+
     </div>
+    
 </body>
 </html>
