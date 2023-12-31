@@ -16,4 +16,10 @@ def create(request):
 
         Todoproject.objects.create(name=name,description=description,status=status)
         return redirect('home')
-    return render(request,'create.html')
+    content = {'mode':'create'}
+    return render(request,'create.html',context=content)
+def edit(request,id):
+    content = {'mode': 'edit'}
+    todo = Todoproject.objects.get(id=id)
+    print(todo)
+    return render(request,'create.html',context=content)

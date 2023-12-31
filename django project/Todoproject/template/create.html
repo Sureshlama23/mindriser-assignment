@@ -8,34 +8,58 @@
     <title>Create Form </title>
 </head>
 <body>
-    <div class="container mt-5">
-        <form class="col-6 mx-auto card p-3 shadow-lg" method="post">
-            {% csrf_token %}
-            <h2> Todo Task Form </h2>
-            <hr>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"> Name </label>
-              <input type="text" class="form-control" required name="name">
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">Description</label>
-              <textarea class="form-control" required name="description"></textarea>
-            </div>
-            <div class="mb-3" >
-              <label for="status">Status</label>
-                <select name="status" class="form-label" aria-label="Floating label select example">
-                    <option value="Done"> Done </option>
-                    <option value="In progress" selected> In progress </option>
-                    <option value="Not done"> Not done </option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        
-
-
-
-    </div>
+  {% include 'nav.html' %}
+    {% if mode == 'create' %}
+        <div>
+            <form class="col-6 mx-auto card p-3 shadow-lg" method="post">
+                {% csrf_token %}
+                <h2> Todo Task Form </h2>
+                <hr>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label"> Name </label>
+                  <input type="text" class="form-control" required name="name">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Description</label>
+                  <textarea class="form-control" required name="description"></textarea>
+                </div>
+                <div class="mb-3" >
+                  <label for="status">Status</label>
+                    <select name="status" class="form-label" aria-label="Floating label select example">
+                        <option value="Done"> Done </option>
+                        <option value="In progress" selected> In progress </option>
+                        <option value="Not done"> Not done </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+        </div>
+    {% else %}
+          <div >
+            <form class="col-6 mx-auto card p-3 shadow-lg" method="post">
+                {% csrf_token %}
+                <h2> This is edit part </h2>
+                <hr>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label"> Name </label>
+                  <input type="text" class="form-control" required name="name">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Description</label>
+                  <textarea class="form-control" required name="description"></textarea>
+                </div>
+                <div class="mb-3" >
+                  <label for="status">Status</label>
+                    <select name="status" class="form-label" aria-label="Floating label select example">
+                        <option value="Done"> Done </option>
+                        <option value="In progress" selected> In progress </option>
+                        <option value="Not done"> Not done </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+          </div>
+    {% endif %}
     
 </body>
 </html>
