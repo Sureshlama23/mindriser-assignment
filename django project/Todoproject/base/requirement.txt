@@ -1,2 +1,1 @@
-need create edit frontend features
-and function edit in backend system
+All function added
