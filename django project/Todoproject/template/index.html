@@ -36,7 +36,8 @@
                     <td>{{todo.description}}</td>
                     <td>{{todo.status}}</td>
                     <td><a href="{% url 'edit' id=todo.id %}"><button class="btn btn-warning">Edit</button></a>
-                        <button class="btn btn-danger">Delete</button>
+                        <a href="{% url 'delete' id=todo.id %}"><button class="btn btn-danger">Delete</button></a>
+                        <a href="{% url 'deleteAll' %}"><button class="btn btn-danger"> Delete All </button></a>
                     </td>
                 </tr>
             {% endfor %}

@@ -42,18 +42,18 @@
                 <hr>
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label"> Name </label>
-                  <input type="text" class="form-control" required name="name">
+                  <input type="text" class="form-control" required name="name" value="{{todo.name}}">
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputPassword1" class="form-label">Description</label>
-                  <textarea class="form-control" required name="description"></textarea>
+                  <textarea class="form-control" required name="description">{{todo.description}}</textarea>
                 </div>
                 <div class="mb-3" >
                   <label for="status">Status</label>
                     <select name="status" class="form-label" aria-label="Floating label select example">
-                        <option value="Done"> Done </option>
-                        <option value="In progress" selected> In progress </option>
-                        <option value="Not done"> Not done </option>
+                        <option value="Done" {% if todo.status == 'Done' %} selected {% endif %}> Done </option>
+                        <option value="In progress" {% if todo.status == 'In progress' %} selected {% endif %} > In progress </option>
+                        <option value="Not done" {% if todo.status == 'Not done' %} selected {% endif %}> Not done </option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>

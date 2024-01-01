@@ -23,5 +23,7 @@ urlpatterns = [
     path('',views.home,name='home'),
     path('create-form/',views.create,name='create-form'),
     path('edit/<int:id>/',views.edit,name='edit'),
+    path('delete/<int:id>/',views.delete,name='delete'),
+    path('delete-all/',views.deleteAll,name='deleteAll'),
     
 ]
