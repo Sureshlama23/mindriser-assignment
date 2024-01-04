@@ -1,0 +1,78 @@
+# HotelManagementSystem
+
+- DB designing
+	Module :
+	- Frontdesk
+	- Management
+	- Restaurant
+	- Accounting
+
+	Frontdesk:
+	- GuestInfo (While the guest enters the hotel and asks for a room to the frontdesk they should provide some details(name,number,email) those details are added on this table)
+		- name (CharField)
+		- phone_no (IntegarField)
+		- address (TextField)
+		- email (EmailField)
+
+	- GuestRoom (To define a guest is in a certain room this model will store the data)
+		- guest (Fk,GuestInfo,OTM)
+		- room (Fk, Room,OTM)
+
+	Management:
+	- Room (To define rooms in the hotel)
+		- room_no (CharField)
+		- floor (CharField)
+		- description (TextField)
+		- type (Fk, RoomType,OTM)
+
+	- RoomType (To define the types of room in the hotel)
+		- name (CharField)
+
+	- EmployeeInfo (To define employees in the hotel)
+		- name
+		- number
+		- user (Fk, User, OTO)
+
+	Restaurant:
+	- Menu (To define the menus of foods)
+		- name (CharField)
+		- description (TextField)
+
+	- Food (To define the foods on menus)
+		- menu (Fk, Menu,OTM)
+		- name (CharField)
+
+	Accounting:
+	- Bill (To define biils of guests in the hotel)
+		- guest (Fk, GuestInfo,OTM)
+		- amount (IntegarField)
+
+	- Payment (To define payments done by guests)
+		- bill (FK, Bill,OTO)
+		- payment_amount (IntegarField)
+
+	User
+	- User
+		- email
+		- password
+
+
+# Relationship type
+
+- One to One relationship
+-> In one to one relationship, if A table is related to B table and if A table's 1 
+id data is already related with any B table's data then we cannot create a new data 
+of B table with the value of A table's 1 id data.
+
+- One to Many relationship
+-> In one to many relationship, if A table is related to B table and  A table's 1 id 
+data or any other data can have multiple relationship with B tables data. Summary,
+ 1 A table's data can Have multiple B table's data.
+
+- Many to Many relationship
+-> In many to many relationship, if A table is related to B table and  A table's
+ 1 id data or any other data can have multiple relationship with B tables data and 
+ B tables data can have multiple A table data as a value. Summary, 1 A table's data can 
+ Have multiple B table's data and 1 B table's data can have multiple A tables data.
+
+
