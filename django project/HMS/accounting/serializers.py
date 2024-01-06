@@ -2,12 +2,12 @@ from dataclasses import field
 from rest_framework import serializers
 from .models import Bill,Payment
 
-class BillSerializer(serializers.Serializer):
+class BillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bill
-        field ='__all__'
+        fields ='__all__'
     
-class PaymentSerializer(serializers.Serializer):
+class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        field = '__all__'
+        fields = '__all__'
