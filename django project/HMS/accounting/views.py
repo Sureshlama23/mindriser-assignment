@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .serializers import BillSerializer
 from rest_framework.viewsets import ModelViewSet
 
+
 # # Create your views here.
 # @api_view(['GET'])
 # def bill_view(request):
