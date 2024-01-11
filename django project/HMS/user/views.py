@@ -3,8 +3,12 @@ from rest_framework.decorators import api_view,permission_classes
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAdminUser
 from .serializers import UserSerializer
+from .models import User
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group
+
 
 # Create your views here.
 @api_view(['POST'])
@@ -14,7 +18,24 @@ def login(request):
     password = request.data.get('password')
     user = authenticate(username=email,password=password)
     if user != None:
-        token, _ =  Token.objects.get_or_create(user=user)
+        token, _ =  Token.objects.get_or_create(user=user)       
         return Response(token.key)
     else:
         return('Invalid credentials!')
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def create_owner(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    serializer = UserSerializer(data=request.data)
+    group = Group.objects.get(name='owner')
+    if serializer.is_valid():
+        hash_password = make_password(password)
+        user_obj = User.objects.create(email=email,password=hash_password)
+        user_obj.groups.add(group)
+        return Response('User Created')
+    else:
+        return Response(serializer.errors)
+
+

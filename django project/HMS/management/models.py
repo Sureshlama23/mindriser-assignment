@@ -18,3 +18,5 @@ class EmployeeInfo(models.Model):
     number = models.IntegerField()
     photo = models.ImageField(upload_to='Employee_image')
     user = models.OneToOneField(User,on_delete=models.CASCADE)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=200)
