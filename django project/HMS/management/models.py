@@ -16,7 +16,7 @@ class RoomType(models.Model):
 class EmployeeInfo(models.Model):
     name = models.CharField(max_length=200)
     number = models.IntegerField()
-    photo = models.ImageField(upload_to='Employee_image')
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to='Employee_image',null=True)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=200)

@@ -8,6 +8,8 @@ from .serializers import UserSerializer
 from .models import User
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from management.models import EmployeeInfo
+from management.serializers import EmployeeInfoSerializer
 
 
 # Create your views here.
@@ -37,5 +39,29 @@ def create_owner(request):
         return Response('User Created')
     else:
         return Response(serializer.errors)
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def employeeInfoView(request):
+    name = request.data.get('name')
+    number = request.data.get('number')
+    email = request.data.get('email')
+    password = request.data.get('password')
+    serializer = EmployeeInfoSerializer(data=request.data)
+    if serializer.is_valid():
+        hash_password = make_password(password)
+        emp_info = EmployeeInfo.objects.create(name=name,number=number,email=email,password=hash_password)
+        emp_info.save()
+        user_obj = User.objects.create(email=email,password=hash_password)
+        user_obj.save()
+        return Response('Employee Info saved & Employee User Login Id created')
+    else:
+        return Response(serializer.errors)
+    
+
+
+    
+
+
+
 
 
