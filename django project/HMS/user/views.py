@@ -1,16 +1,14 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny,IsAdminUser
-from .serializers import UserSerializer
+from .serializers import UserSerializer,GroupSerializer
 from .models import User
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
-from management.models import EmployeeInfo
-from management.serializers import EmployeeInfoSerializer
-
+from rest_framework.renderers import JSONRenderer,HTMLFormRenderer
 
 # Create your views here.
 @api_view(['POST'])
@@ -39,23 +37,14 @@ def create_owner(request):
         return Response('User Created')
     else:
         return Response(serializer.errors)
-@api_view(['POST'])
-@permission_classes([IsAdminUser])
-def employeeInfoView(request):
-    name = request.data.get('name')
-    number = request.data.get('number')
-    email = request.data.get('email')
-    password = request.data.get('password')
-    serializer = EmployeeInfoSerializer(data=request.data)
-    if serializer.is_valid():
-        hash_password = make_password(password)
-        emp_info = EmployeeInfo.objects.create(name=name,number=number,email=email,password=hash_password)
-        emp_info.save()
-        user_obj = User.objects.create(email=email,password=hash_password)
-        user_obj.save()
-        return Response('Employee Info saved & Employee User Login Id created')
-    else:
-        return Response(serializer.errors)
+    
+@api_view(['GET'])
+def group_list(request):
+    group_objs = Group.objects.all()
+    serializer = GroupSerializer(group_objs,many=True)
+    return Response(serializer.data)
+           
+
     
 
 

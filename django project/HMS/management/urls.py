@@ -1,6 +1,6 @@
 from django.urls import path
-from user.views import employeeInfoView
+from management.views import EmployeeInfoView
 
 urlpatterns = [
-    path('employee-user/',employeeInfoView,name='employee-user')
+    path('employee-info/all',EmployeeInfoView.as_view({'get':'list','post':'create'}),name='employee-info'),
 ]

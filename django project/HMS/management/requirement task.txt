@@ -1,0 +1,4 @@
+# Employee info create (User create) requirements
+
+# While creating employeeinfo object ask for extra fields email and password
+# Use the email and password to use create query on User table which will create user data.
