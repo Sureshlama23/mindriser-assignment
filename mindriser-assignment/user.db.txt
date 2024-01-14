@@ -1,0 +1,1 @@
+{"username": "suresh", "email": "sureshlama@gmail.com", "password": "lover@sl1", "usertype": "buyer"}-{"username": "nabina", "email": "nabinalama@gmail.com", "password": "nabina123", "usertype": "seller"}-
