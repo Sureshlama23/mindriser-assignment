@@ -4,7 +4,7 @@ from .models import Bill,Payment
 from rest_framework.response import Response
 from .serializers import BillSerializer
 from rest_framework.viewsets import ModelViewSet
-
+from core.permissions import CustomPermissions
 
 # # Create your views here.
 # @api_view(['GET'])
@@ -17,6 +17,7 @@ class BillView(ModelViewSet):
     # Method 1 
     queryset = Bill.objects.all()
     serializer_class = BillSerializer
+    permission_classes = [CustomPermissions]
     # Inheritance method 2
     def list(self, request):
         queryset = self.get_queryset()
@@ -39,7 +40,7 @@ class BillView(ModelViewSet):
         return Response(serializer.data)
     def update(self,request,pk=None):
         try:
-            queryset = Bill.objects.get(id=Pk)
+            queryset = Bill.objects.get(id=pk)
         except:
               return Response('Data Not found!')
         serializer = self.serializer_class(queryset,data=request.data)

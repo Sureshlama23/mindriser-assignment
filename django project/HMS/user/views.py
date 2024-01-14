@@ -26,28 +26,26 @@ def login(request):
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def create_owner(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
-    serializer = UserSerializer(data=request.data)
-    group = Group.objects.get(name='owner')
-    if serializer.is_valid():
-        hash_password = make_password(password)
-        user_obj = User.objects.create(email=email,password=hash_password)
-        user_obj.groups.add(group)
-        return Response('User Created')
-    else:
-        return Response(serializer.errors)
+    try:  
+        email = request.data.get('email')
+        password = request.data.get('password')
+        serializer = UserSerializer(data=request.data)
+        group = Group.objects.get(name='owner')
+        if serializer.is_valid():
+            hash_password = make_password(password)
+            user_obj = User.objects.create(email=email,password=hash_password)
+            user_obj.groups.add(group)
+            return Response('User Created')
+        else:
+            return Response(serializer.errors)
+    except:
+        return Response('Key Value Missing!')
     
 @api_view(['GET'])
 def group_list(request):
-    group_objs = Group.objects.all().exclude(name='owner')
+    group_objs = Group.objects.all().exclude(name='Owner')
     serializer = GroupSerializer(group_objs,many=True)
-    return Response(serializer.data)
-           
-
-    
-
-
+    return Response(serializer.data)   
     
 
 
