@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from .serializers import BillSerializer
 from rest_framework.viewsets import ModelViewSet
 from core.permissions import CustomPermissions
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 # # Create your views here.
 # @api_view(['GET'])
@@ -18,10 +20,15 @@ class BillView(ModelViewSet):
     queryset = Bill.objects.all()
     serializer_class = BillSerializer
     permission_classes = [CustomPermissions]
+    filter_backends = [DjangoFilterBackend,SearchFilter]
+    filterset_fields = ['guest']
+    search_fields = ['amount']
+
     # Inheritance method 2
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset,many=True)
+        filter_queryset = self.filter_queryset(queryset)
+        serializer = self.serializer_class(filter_queryset,many=True)
         return Response(serializer.data)
         
     def create(self, request):
@@ -51,7 +58,8 @@ class BillView(ModelViewSet):
     def destroy(self,request,pk=None):
         try:
             queryset = Bill.objects.get(id=pk)
+            queryset.delete()
+            return Response('Data delete')
         except:
               return Response('Data Not found!')
-        queryset.delete()
-        return Response('Data delete')
+        
