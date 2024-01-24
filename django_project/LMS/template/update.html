@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+{% block content %}
+
+<h4>Update Library</h4>
+    
+<div class="col-sm-8">
+    <h4 class="text-center alert alert-info"> Update Book Detail </h4>
+        <form action="" class="row" method="POST">
+            {% csrf_token %}
+            <div>   
+                <label for="form-control"> Title</label>
+                <input type="text" name="title" class="form-control" required value="{{book.title}}">
+            </div>
+        
+            <div>   
+                <label for="form-control"> Author</label>
+                <input type="text" name="author" class="form-control" required value="{{book.author}}">
+            </div>
+        
+            <div>   
+                <label for="form-control"> Published Date</label>
+                <input type="date" name="published_date" class="form-control" required value="{{book.published_date}}">
+            </div>
+        
+            <div>   
+                <label for="form-control"> ISBN </label>
+                <input type="text" name="ISBN" class="form-control" required value="{{book.ISBN}}">
+            </div>
+        
+            <div>   
+                <label for="form-control"> Description</label>
+                <textarea type="text" name="description" class="form-control" required>{{book.description}}</textarea>
+            </div>
+            <div>
+                <label for="formFile" class="form-label"> PDF File </label>
+                <input class="form-control" type="file" id="formFile" name="file">
+            </div>
+            <br>
+            <br>
+            <div class="d-grid gap-2 d-md-block">
+                <button class="btn btn-primary"> Update </button>
+            </div>
+        </form>
+            <a href="{% url 'addandshow' %}"><button class="btn btn-primary" class="d-inline"> Home </button></a>
+    </div>
+    {% endblock content %}

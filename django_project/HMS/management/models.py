@@ -12,9 +12,11 @@ class Room(models.Model):
 
 class RoomType(models.Model):
     name = models.CharField(max_length=200)
-
+    def __str__(self) -> str:
+        return self.name
 class EmployeeInfo(models.Model):
     name = models.CharField(max_length=200)
     number = models.IntegerField()
     photo = models.ImageField(upload_to='Employee_image')
     user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
+

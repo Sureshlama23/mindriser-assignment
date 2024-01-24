@@ -6,6 +6,8 @@ from rest_framework.viewsets import ModelViewSet
 from core.permissions import CustomPermissions
 from rest_framework.decorators import permission_classes
 from rest_framework.filters import SearchFilter,OrderingFilter
+from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 
@@ -53,6 +55,13 @@ class GuestInfoView(ModelViewSet):
             return Response({"status": 200, "message": "Data delete success"})
         except:
             return Response({"status": 403, "error": "Data not found"})
+        
+class GuestRoomView(generics.ListAPIView):
+    queryset = GuestRoom.objects.all()
+    serializer_class = GuestRoomSerializer
+    permission_classes = [CustomPermissions]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['guest','room']
         
     
 

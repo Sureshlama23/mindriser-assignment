@@ -1,0 +1,94 @@
+{% extends "index.html" %}
+{% block content %}
+
+
+
+    <div class="row">
+        <div class="col-sm-4">
+            <h4 class="text-center alert alert-info"> Add New Book</h4>
+                <form action="" class="row" method="POST">
+                    {% csrf_token %}
+                    <div>   
+                        <label for="form-control"> Title</label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                
+                    <div>   
+                        <label for="form-control"> Author</label>
+                        <input type="text" name="author" class="form-control" required>
+                    </div>
+                
+                    <div>   
+                        <label for="form-control"> Published Date</label>
+                        <input type="date" name="published_date" class="form-control" required>
+                    </div>
+                
+                    <div>   
+                        <label for="form-control"> ISBN </label>
+                        <input type="text" name="ISBN" class="form-control" required>
+                    </div>
+                
+                    <div>   
+                        <label for="form-control"> Description</label>
+                        <textarea type="text" name="description" class="form-control" required></textarea>
+                    </div>
+                    <div>
+                        <label for="formFile" class="form-label"> PDF File </label>
+                        <input class="form-control" type="file" id="formFile" name="file">
+                    </div>
+                    <br>
+                    <br>
+                    <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary">Add Book</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-7">
+            <h4 class="text-center alert alert-info">Book Table List</h4>
+            
+            {% if message %}
+               <H4>{{message}}</H4>
+            {% endif %}
+                    <div>
+                    {% if books %}       
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Author</th>
+                                    <th scope="col">Published Date</th>
+                                    <th scope="col">ISBN</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">PDF File</th>
+                                    <th scope="col">Action</th>
+                                <tr>
+                            </thead>
+                        <tbody>
+                            {% for book in books %}
+                            <tr>
+                                <td>{{book.id}}</td>
+                                <td>{{book.title}}</td>
+                                <td>{{book.author}}</td>
+                                <td>{{book.published_date}}</td>
+                                <td>{{book.ISBN}}</td>
+                                <td>{{book.description}}</td>
+                                <td>{{book.file}}</td>
+                                <td>
+                                    <a href="{% url 'update' id=book.id %}"><button class="btn btn-warning">Edit</button></a>
+                                    <a href="{% url 'delete' id=book.id %}"><button class="btn btn-danger">Delete</button></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+
+                    <h4 class="text-center alert alert-warning"> No Records </h4>
+                    
+                    {% endif %}
+                    </div>
+            <div>
+    </div>
+{% endblock content %}
+    

@@ -12,7 +12,7 @@ from rest_framework.filters import SearchFilter
 # @api_view(['GET'])
 # def bill_view(request):
 #     bill_obj = Bill.objects.all()
-#     bill_json = BillSerializer(bill_obj,many=True)
+#     bill_json = BillSerializer(bill_obj,many=True) 
 #     return Response(bill_json.data)
 
 class BillView(ModelViewSet):
