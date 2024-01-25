@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-sm-4">
             <h4 class="text-center alert alert-info"> Add New Book</h4>
-                <form action="" class="row" method="POST">
+                <form action="" class="row" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div>   
                         <label for="form-control"> Title</label>
@@ -45,10 +45,6 @@
             </div>
             <div class="col-sm-7">
             <h4 class="text-center alert alert-info">Book Table List</h4>
-            
-            {% if message %}
-               <H4>{{message}}</H4>
-            {% endif %}
                     <div>
                     {% if books %}       
                         <table class="table table-hover">
@@ -65,18 +61,18 @@
                                 <tr>
                             </thead>
                         <tbody>
-                            {% for book in books %}
+                            {% for i in books %}
                             <tr>
-                                <td>{{book.id}}</td>
-                                <td>{{book.title}}</td>
-                                <td>{{book.author}}</td>
-                                <td>{{book.published_date}}</td>
-                                <td>{{book.ISBN}}</td>
-                                <td>{{book.description}}</td>
-                                <td>{{book.file}}</td>
+                                <td>{{i.id}}</td>
+                                <td>{{i.title}}</td>
+                                <td>{{i.author}}</td>
+                                <td>{{i.published_date}}</td>
+                                <td>{{i.ISBN}}</td>
+                                <td>{{i.description}}</td>
+                                <td><a href="{{ i.booksfile.url }}" download>{{i.file}}</a></td>
                                 <td>
-                                    <a href="{% url 'update' id=book.id %}"><button class="btn btn-warning">Edit</button></a>
-                                    <a href="{% url 'delete' id=book.id %}"><button class="btn btn-danger">Delete</button></a>
+                                    <a href="{% url 'update' id=i.id %}"><button class="btn btn-warning">Edit</button></a>
+                                    <a href="{% url 'delete' id=i.id %}"><button class="btn btn-danger">Delete</button></a>
                                 </td>
                             </tr>
                             {% endfor %}

@@ -7,4 +7,4 @@ class Book(models.Model):
     published_date = models.DateField()
     ISBN = models.CharField(max_length=50,unique=True)
     description = models.TextField()
-    file = models.FileField(upload_to='static/bookspdf/',null=True)
+    file = models.FileField(null=True)

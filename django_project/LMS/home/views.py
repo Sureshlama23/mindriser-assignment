@@ -12,7 +12,7 @@ def addView(request):
         published_date = request.POST.get('published_date')
         ISBN = request.POST.get('ISBN')
         description = request.POST.get('description')
-        file = request.POST.get('file')
+        file = request.FILES.get('file')
         book_obj = Book.objects.create(title=title,author=author,published_date=published_date,ISBN=ISBN,description=description,file=file)
         book_obj.save()
         return redirect('addandshow')
@@ -32,7 +32,7 @@ def update(request,id):
         published_date = request.POST.get('published_date')
         ISBN = request.POST.get('ISBN')
         description = request.POST.get('description')
-        file = request.POST.get('file')
+        file = request.FILES.get('file')
         book_obj.title = title
         book_obj.author = author
         book_obj.published_date = published_date
