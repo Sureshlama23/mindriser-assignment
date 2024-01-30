@@ -53,4 +53,8 @@ class BookView(APIView):
             return Response({'message': 'Data deleted'})        
         except:
             return Response({'message': 'No data found'},status=status.HTTP_400_BAD_REQUEST)
-
+        
+def home(request):
+    book_obj = Book.objects.all()
+    serializer = BookSerializer(book_obj,many=True)
+    return render(request,serializer.data,'index.html')

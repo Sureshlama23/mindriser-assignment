@@ -1,5 +1,5 @@
 """
-URL configuration for LMS_API project.
+URL configuration for Ecommerce project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -16,14 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from book import views
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.home,name='home'),
-    path('book/',views.BookView.as_view(),name='book'),
-    path('book/<int:pk>/',views.BookView.as_view(),name='book'),
-
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
