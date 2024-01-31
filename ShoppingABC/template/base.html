@@ -100,11 +100,11 @@
                         {% for category in categories %}
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link" data-toggle="dropdown">{{ category.category_name }}<i class="fa fa-angle-down float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                {% for brand in category.brand_category.all %}
-                                 <a href="" class="dropdown-item">{{ brand.brand_name }}</a>
+                            <!-- <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                {% for brand in products %}
+                                 <a href="" class="dropdown-item">{{ brand.brand }}</a>
                                  {% endfor %}
-                            </div>
+                            </div> -->
                         </div>
                         {% endfor %}
                 </nav>

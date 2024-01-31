@@ -34,20 +34,20 @@ class Category(models.Model):
         return self.category_name
 
 class Brand(models.Model):
-    category_type = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="brand_category")
     brand_name = models.CharField(max_length=100)
     brand_slug = AutoSlugField(populate_from='brand_name',unique=True,null=True,default=None)
 
     def __str__(self):
-        return f"{self.brand_name} {self.category_type.category_name}"
+        return self.brand_name
 
 class Product(models.Model):
     product_name = models.CharField(max_length=100)
     selling_price = models.PositiveIntegerField(default=1)
     discount_price = models.PositiveIntegerField(default=1)
-    Product_description = models.TextField()
+    product_description = models.TextField()
     product_image = models.ImageField(upload_to='products_imgs')
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,related_name='productBrand_Category')
+    brand = models.ForeignKey(Brand,on_delete=models.PROTECT)
+    category = models.ForeignKey(Category,on_delete=models.PROTECT,related_name='product_category')
     product_slug = AutoSlugField(populate_from='product_name',unique=True,null=True,default=None)
 
     def __str__(self):

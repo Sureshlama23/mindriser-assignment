@@ -5,27 +5,26 @@ from django.views import View
 categories = Category.objects.all
 
 # Create your views here.
-class homeView(View):
-    def get(self,request):
-        products = Product.objects.all()
-        mode = None
-        if request.method == 'GET':
-            query_by_name = request.GET.get('product_name')
-            if query_by_name is not None:
-                products = Product.objects.filter(product_name__icontains=query_by_name)
-                mode='productsonly'
-        data = {'categories': categories,'products':products,'mode':mode}
-        return render(request,'index.html',data)
+def home(request,slug=None):
+    products = Product.objects.all()
+    mode = None
+    if slug != None:
+        products = Product.objects.filter(category__category_name__icontains=slug)
+        mode='productsonly'
+    if request.method == 'GET':
+        query_by_name = request.GET.get('product_name')
+        if query_by_name is not None:
+            products = Product.objects.filter(product_name__icontains=query_by_name)
+            mode='productsonly'
+    data = {'categories': categories,'products':products,'mode':mode}
+    return render(request,'index.html',data)
 class shopView(View):
     def get(self,request):
         products = Product.objects.all()
         if request.method == 'GET':
             query = request.GET.get('product_name')
-            lowest_price = request.GET.get('low_price')
             if query is not None:
                 products = Product.objects.filter(product_name__icontains=query)
-            elif lowest_price is not None:
-                products = Product.objects.all().order_by('-discount_price')
         data = {'categories': categories,'products':products}
         return render(request,'shop.html',data)
 
