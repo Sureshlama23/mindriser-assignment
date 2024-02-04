@@ -60,7 +60,7 @@
         </div>
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <a href="" class="text-decoration-none">
+                <a href="{% url 'home' %}" class="text-decoration-none">
                     <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
                 </a>
             </div>
@@ -72,16 +72,18 @@
                     </div>
                 </form>
             </div>
+            {% if request.user.is_authenticated %}
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
                 <a href="" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
+                <!-- Profile View and edit -->
+                <a href="{% url 'profile' %}" class="btn border" color="red">
+                    <i class="fa fa-user text-primary"> {{user.username}}</i>
+                </a>
             </div>
+            {% endif %}
         </div>
     </div>
     <!-- Topbar End -->
@@ -99,12 +101,7 @@
                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                         {% for category in categories %}
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">{{ category.category_name }}<i class="fa fa-angle-down float-right mt-1"></i></a>
-                            <!-- <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                {% for brand in products %}
-                                 <a href="" class="dropdown-item">{{ brand.brand }}</a>
-                                 {% endfor %}
-                            </div> -->
+                            <a href="{% url 'homedata' category.category_slug %}" class="nav-link">{{ category.category_name }}</a>
                         </div>
                         {% endfor %}
                 </nav>
@@ -131,8 +128,12 @@
                             <a href="{% url 'contact' %}" class="nav-item nav-link {% if request.path == '/contact/' %} active {% endif %}">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a href="{% url 'login-profile' %}" class="nav-item nav-link">Login</a>
-                            <a href="{% url 'register' %}" class="nav-item nav-link">Register</a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
+                            {% else %}
+                            <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
+                            <a href="{% url 'customer-registration' %}" class="nav-item nav-link">Register</a>
+                            {% endif %}
                         </div>
                     </div>
                 </nav>

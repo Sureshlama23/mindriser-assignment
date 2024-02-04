@@ -19,6 +19,9 @@ from django.urls import path
 from home import views
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth import views as auth_views
+from home.forms import LoginForm,MyPasswordChangeForm
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +32,10 @@ urlpatterns = [
     path('shoppingCart/',views.shoppingCart,name='shoppingCart'),
     path('checkout/',views.checkout,name='checkout'),
     path('contact/',views.contact,name='contact'),
-    path('register/',views.register,name='register'),
-    path('login-profile/',views.login,name='login-profile'),
+    path('registration/',views.CustomerRegistrationView.as_view(),name='customer-registration'),
+    path('accounts/login/',auth_views.LoginView.as_view(template_name='login.html',authentication_form=LoginForm,next_page='home'),name='login'),
+    path('logout/',views.logout_user,name='logout'),
+    path('profile/',views.profileView,name='profile'),
+    path('passwordchange/',auth_views.PasswordChangeView.as_view(template_name='passwordchange.html',form_class=MyPasswordChangeForm,success_url='/passwordchangedone/'),name='passwordchange'),
+    path('passwordchangedone/',auth_views.PasswordChangeDoneView.as_view(template_name='passwordchangedone.html'),name='passwordchangedone')
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

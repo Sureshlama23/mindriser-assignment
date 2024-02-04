@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %} Login {% endblock title %}
+{% block content %}
+
+    <form action="" method="POST" novalidate class="shadow p-5">
+        {% csrf_token %}
+        {% for fm in form %}
+        <div class="form-group">
+            {{fm.label_tag}} {{fm}} 
+            <small class="text-danger">
+                {{fm.errors}}
+                <br>
+            </small>
+        </div>
+        {% endfor %}
+        <small>
+            <a href=""> Forgot Password </a>
+        </small>
+        <br>
+        <input type="submit" class="btn btn-primary mt-4">
+        <div class="text-center fw-bold">
+            <small>I want to New Registration | <a href="{% url 'customer-registration' %}">Create an Account</a></small>
+
+        </div>
+        {% for error in form.non_field_errors %}
+        <P {% if error %} class="alert alert-danger my-3" {% endif %}>{{error}}</P>
+        {% empty %}
+        {% endfor %}
+    </form>
+
+
+{% endblock content %}
