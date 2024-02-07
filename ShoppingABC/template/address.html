@@ -1,0 +1,36 @@
+{% extends 'nav.html' %}
+{% block title %} Address {% endblock title %}
+{% block content %}
+    <!-- Account page navigation-->
+        <nav class="nav nav-borders">
+            <a class="nav-item nav-link {% if request.path == '/profile/' %} btn-primary {% endif %}" href="{% url 'profile' %}">Profile</a>
+            <a class="nav-item nav-link {% if request.path == '/address/' %} btn-primary {% endif %}" href="{% url 'address' %}">Address</a>
+            <a class="nav-item nav-link {% if request.path == '/passwordchange/' %} btn-primary {% endif %}" href="{% url 'passwordchange' %}">Change Password</a>
+        </nav>
+    <!-- Account page navigation end -->
+    <div class="container shadow p-5">
+        <div class="row">
+        {% for address in addresses %}
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <H3>Address: {{forloop.counter}}</H3>
+                        <p> Name: {{address.name}}</p>
+                        <p> Locality: {{address.locality}}</p>
+                        <p> City: {{address.city}}</p>
+                        <p> State: {{address.state}}</p>
+                        <p> Zipcode: {{address.zipcode}}</p>
+                        <p> Number: {{address.number}}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+        <h4 class="alert-danger">No Address!!</h4>
+        {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock content %}
+
+    

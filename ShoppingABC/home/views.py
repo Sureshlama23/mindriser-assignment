@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
-from .models import Category,Brand,Product
+from .models import Category,Product,Customer,Cart
 from django.views import View
-from .forms import CustomerRegistrationForm,LoginForm
+from .forms import CustomerRegistrationForm,CustomerForm
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import logout
+
 
 
 categories = Category.objects.all
@@ -13,16 +14,20 @@ categories = Category.objects.all
 def home(request,slug=None):
     products = Product.objects.all()
     mode = None
+    cart_objs = None
+    if request.user:
+        user = request.user
+        cart_objs = Cart.objects.filter(user=user)
     if slug != None:
         products = Product.objects.filter(category__category_name__icontains=slug)
-        mode='productsonly'
+        mode='categoryproduct'
     if request.method == 'GET':
         query = request.GET.get('product_name')
         if query is not None:
             multiple_query = Q(Q(product_name__icontains=query) | Q(brand__brand_name__icontains=query) | Q(category__category_name__icontains=query))
             products = Product.objects.filter(multiple_query)
             mode='productsonly'
-    data = {'categories': categories,'products':products,'mode':mode}
+    data = {'categories': categories,'products':products,'mode':mode,'cart_objs':cart_objs}
     return render(request,'index.html',data)
 class shopView(View):
     def get(self,request):
@@ -45,10 +50,29 @@ class productDetailView(View):
             'categories': categories,'product':product}
         return render(request,'detail.html',data)
 
-def shoppingCart(request):
-    products = Product.objects.all()
-    data = {'categories': categories,'products':products}
-    return render(request,'cart.html',data)
+class ShoppingCartView(View):
+    def get(self,request,slug=None):
+        products = Product.objects.all()
+        user = request.user
+        # add to cart
+        if slug is not None:
+            product_add_to_cart = Product.objects.get(product_slug=slug)
+            cart_product_obj = Cart.objects.create(user=user,product=product_add_to_cart)
+            cart_product_obj.save()
+        # add to cart end
+        subtotal = 0.00
+        shipping_amount = 50
+        Total_amount = 0.00
+        cart_products = [ p for p in Cart.objects.all() if request.user == user]
+        if cart_products: 
+            for p in cart_products:
+                temp_amount = (p.product.discount_price * p.quantity)
+                subtotal = temp_amount 
+                Total_amount = subtotal + shipping_amount
+        cart_product = Cart.objects.filter(user=user)
+        data = {'categories': categories,'products':products,'cart_products':cart_product,
+                    'subtotal':subtotal,'total_amount':Total_amount,'shipping_amount':shipping_amount}
+        return render(request,'cart.html',data)  
 
 def checkout(request):
     products = Product.objects.all()
@@ -74,12 +98,36 @@ class CustomerRegistrationView(View):
             form.save()
         data = {'categories': categories,'products':products,'form':form}
         return render(request,'register.html',data)
+    
+class ProfileView(View):
+    def get(self,request):
+        products = Product.objects.all()
+        form =CustomerForm()
+        data = {'categories': categories,'products':products,'form':form}
+        return render(request,'profile.html',data)
+    def post(self,request):
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            usr = request.user
+            name = form.cleaned_data['name']
+            locality = form.cleaned_data['locality']
+            city = form.cleaned_data['city']
+            state = form.cleaned_data['state']
+            zipcode = form.cleaned_data['zipcode']
+            number = form.cleaned_data['number']
+            reg = Customer(user=usr,name=name,locality=locality,city=city,state=state,zipcode=zipcode,number=number)
+            reg.save()
+            messages.success(request,'Profile Update Successfully')
+        else:
+            messages.error(request,'Profile Update remain same')
+        return render(request,'profile.html')
 
-def profileView(request):
-    products = Product.objects.all()
-    data = {'categories': categories,'products':products} 
-    return render(request,'profile.html')
-
+class AddressView(View):
+    def get(self,request):
+        address = Customer.objects.filter(user=request.user)
+        products = Product.objects.all()
+        data = {'categories': categories,'products':products,'addresses':address}
+        return render(request,'address.html',data)
     
 def logout_user(request):
     logout(request)

@@ -4,7 +4,7 @@ from home.models import Customer,Category,Brand,Product,Cart,OrderPlaced
 # Register your models here.
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user','name','locality','city','zipcode','state']
+    list_display = ['id', 'user','name','locality','city','zipcode','state','number']
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -25,3 +25,4 @@ class CartAdmin(admin.ModelAdmin):
 @admin.register(OrderPlaced)
 class OrderedPlacedAdmin(admin.ModelAdmin):
     list_display = ['id','user','customer','product','quantity','ordered_date']
+

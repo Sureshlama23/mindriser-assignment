@@ -21,6 +21,7 @@ class Customer(models.Model):
     city = models.CharField(max_length=150)
     zipcode = models.IntegerField()
     state = models.CharField(choices=STATE_CHOICES,max_length=60)
+    number = models.CharField(max_length=20,unique=True,null=True)
 
 
 

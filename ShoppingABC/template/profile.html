@@ -1,74 +1,35 @@
-{% extends 'base.html' %}
+{% extends 'nav.html' %}
 {% block title %} Profile {% endblock title %}
 {% block content %}
-<div class="container-xl px-4 mt-4">
     <!-- Account page navigation-->
-    <nav class="nav nav-borders">
-        <a class="nav-link" href="{% url 'passwordchange' %}">Change Password</a>
-    </nav>
-    <hr class="mt-0 mb-3">
-    <div class="row">
-        
-        <div class="col-xl-12">
-            <!-- Account details card-->
-            <div class="card mb-4">
-                <div class="card-header">Account Details</div>
-                <div class="card-body">
-                    <form>
-                        <!-- Form Group (username)-->
-                        <div class="mb-3">
-                            <label class="small mb-1" for="inputUsername">Username</label>
-                            <input class="form-control" id="inputUsername" type="text" placeholder="" value="{{user.username}}">
-                        </div>
-                        <!-- Form Row-->
-                        <div class="row gx-3 mb-3">
-                            <!-- Form Group (first name)-->
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputFirstName">First name</label>
-                                <input class="form-control" id="inputFirstName" type="text" placeholder="" value="">
-                            </div>
-                            <!-- Form Group (last name)-->
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputLastName">Last name</label>
-                                <input class="form-control" id="inputLastName" type="text" placeholder="" value="">
-                            </div>
-                        </div>
-                        <!-- Form Row        -->
-                        <div class="row gx-3 mb-3">
-                            <!-- Form Group (City)-->
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputOrgName">City</label>
-                                <input class="form-control" id="inputOrgName" type="text" placeholder="" value="">
-                            </div>
-                            <!-- Form Group (location)-->
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputLocation">Zipcode</label>
-                                <input class="form-control" id="inputLocation" type="text" placeholder="" value="">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputLocation">Country</label>
-                                <input class="form-control" id="inputLocation" type="text" placeholder="" value="">
-                            </div>
-                        </div>
-                        <!-- Form Group (email address)-->
-                        <!-- Form Row-->
-                        <div class="row gx-3 mb-3">
-                            <!-- Form Group (phone number)-->
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputPhone">Phone number</label>
-                                <input class="form-control" id="inputPhone" type="tel" placeholder="" value="">
-                            </div>
-                            <!-- Form Group (birthday)-->
-                            <div class="col-md-6">
-                                <label class="small mb-1">Date of Birth</label>
-                                <input class="form-control" id="inputBirthday" type="date" name="birthday" value="">
-                            </div>
-                        </div>
-                        <!-- Save changes button-->
-                        <button class="btn btn-primary" type="button">Save changes</button>
-                    </form>
+        <nav class="nav nav-borders">
+            <a class="nav-item nav-link {% if request.path == '/profile/' %} btn-primary {% endif %}" href="{% url 'profile' %}">Profile</a>
+            <a class="nav-item nav-link {% if request.path == '/address/' %} btn-primary {% endif %}" href="{% url 'address' %}">Address</a>
+            <a class="nav-item nav-link {% if request.path == '/passwordchange/' %} btn-primary {% endif %}" href="{% url 'passwordchange' %}">Change Password</a>
+        </nav>
+    <!-- navigation end -->
+        <form action="" method="POST" novalidate class="shadow p-5">
+        <h3>Welcome {{user.username | capfirst }}</h3>
+        <br>
+                {% csrf_token %}
+                {% for fm in form %}
+                <div class="form-group mb-3">
+                    {{fm.label_tag}} {{fm}} 
+                    <small class="text-danger">
+                        {{fm.errors}}
+                    </small>
                 </div>
-            </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary mt-4">Update</button>
+                {% for error in form.non_field_errors %}
+                <P {% if error %} class="alert alert-danger my-3" {% endif %}>{{error}}</P>
+                {% empty %}
+                {% endfor %}
+            </form>
+            {% for message in messages %}
+                <p {% if message.tags %} class="alert alert-{{message.tags}} mb-5" {% endif %}>{{message}}</p>
+            {% empty %}
+            {% endfor %}
         </div>
     </div>
 </div>
