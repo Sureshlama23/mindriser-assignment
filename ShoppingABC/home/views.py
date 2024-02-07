@@ -14,10 +14,10 @@ categories = Category.objects.all
 def home(request,slug=None):
     products = Product.objects.all()
     mode = None
-    cart_objs = None
-    if request.user:
+    cart_objs_num = None
+    if request.user.is_authenticated:
         user = request.user
-        cart_objs = Cart.objects.filter(user=user)
+        cart_objs_num = Cart.objects.filter(user=user).order_by('id')
     if slug != None:
         products = Product.objects.filter(category__category_name__icontains=slug)
         mode='categoryproduct'
@@ -27,7 +27,7 @@ def home(request,slug=None):
             multiple_query = Q(Q(product_name__icontains=query) | Q(brand__brand_name__icontains=query) | Q(category__category_name__icontains=query))
             products = Product.objects.filter(multiple_query)
             mode='productsonly'
-    data = {'categories': categories,'products':products,'mode':mode,'cart_objs':cart_objs}
+    data = {'categories': categories,'products':products,'mode':mode,'cart_objs_num':cart_objs_num}
     return render(request,'index.html',data)
 class shopView(View):
     def get(self,request):
@@ -51,27 +51,34 @@ class productDetailView(View):
         return render(request,'detail.html',data)
 
 class ShoppingCartView(View):
+    subtotal = 0.00
+    shipping_amount = 50
+    Total_amount = 0.00
+    coupon = "10%-off"
+    products = Product.objects.all()
     def get(self,request,slug=None):
-        products = Product.objects.all()
         user = request.user
         # add to cart
         if slug is not None:
             product_add_to_cart = Product.objects.get(product_slug=slug)
-            cart_product_obj = Cart.objects.create(user=user,product=product_add_to_cart)
-            cart_product_obj.save()
+            try:
+                cart = Cart.objects.get(Q(product=product_add_to_cart) & Q(user=user))
+                cart.quantity +=1
+                cart.save()
+            except:
+                cart_product_obj = Cart.objects.create(user=user,product=product_add_to_cart)
+                cart_product_obj.save()
         # add to cart end
-        subtotal = 0.00
-        shipping_amount = 50
-        Total_amount = 0.00
+        
         cart_products = [ p for p in Cart.objects.all() if request.user == user]
         if cart_products: 
             for p in cart_products:
                 temp_amount = (p.product.discount_price * p.quantity)
-                subtotal = temp_amount 
-                Total_amount = subtotal + shipping_amount
+                self.subtotal += temp_amount 
+                Total_amount = self.subtotal + self.shipping_amount
         cart_product = Cart.objects.filter(user=user)
-        data = {'categories': categories,'products':products,'cart_products':cart_product,
-                    'subtotal':subtotal,'total_amount':Total_amount,'shipping_amount':shipping_amount}
+        data = {'categories': categories,'products':self.products,'cart_products':cart_product,
+                    'subtotal':self.subtotal,'total_amount':Total_amount,'shipping_amount':self.shipping_amount}
         return render(request,'cart.html',data)  
 
 def checkout(request):

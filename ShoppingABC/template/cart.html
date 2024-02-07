@@ -35,7 +35,7 @@
                     <tbody class="align-middle">
                         {% for cart_product in cart_products %}
                         <tr>
-                            <td class="align-middle"><img src="{{cart_product.product.product_image.url}}" alt="" style="width: 50px;">{{   cart_product.product.product_name}}</td>
+                            <td class="align-middle"><img src="{{cart_product.product.product_image.url}}" alt="" style="width: 50px;">{{cart_product.product.product_name | slice:":11"}}</td>
                             <td class="align-middle">{{cart_product.product.discount_price | floatformat:"2g"}}</td>
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -44,7 +44,7 @@
                                         <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" name="quantity" value="1">
+                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" name="quantity" value="{{cart_product.quantity}}">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-primary btn-plus">
                                             <i class="fa fa-plus"></i>
@@ -95,9 +95,13 @@
             </div>
         </div>
     {% else %}
-    <div class="text-center">
-        No Product in Cart!!
-        <img src="/static/img/shopping-cart-304843_1280.png" alt="">
+    <div class="container my-5">
+        <div class="row">
+            <div class="text-center">
+                <h2 class="text-center">You have no Product in Cart!!</h2>
+                <img src="/static/img/shopping-cart-304843_1280.png" alt="" class="img-fluid img-thumbnail w-25">
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>
