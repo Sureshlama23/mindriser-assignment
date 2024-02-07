@@ -34,6 +34,7 @@ urlpatterns = [
     path('checkout/',views.checkout,name='checkout'),
     path('contact/',views.contact,name='contact'),
     path('registration/',views.CustomerRegistrationView.as_view(),name='customer-registration'),
+    path('registration/<slug:slug>',views.CustomerRegistrationView.as_view(),name='customer-registration'),
     path('accounts/login/',auth_views.LoginView.as_view(template_name='login.html',authentication_form=LoginForm,next_page='home'),name='login'),
     path('logout/',views.logout_user,name='logout'),
     path('profile/',views.ProfileView.as_view(),name='profile'),

@@ -6,6 +6,9 @@
                         <P{% if message.tags%} class="alert alert-{{message.tags}}" {% endif %}>{{message}}</P>
                     {% empty %}
                     {% endfor %}
+                    {% if message %}
+                    <h3 class="alert-primary text-center">{{message}}</h3>
+                    {% endif %}
                     {% csrf_token %}
                     {% for fm in form %}
                     <div class="form-group mb-3">

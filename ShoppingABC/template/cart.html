@@ -31,7 +31,6 @@
                             <th>Remove</th>
                         </tr>
                     </thead>
-                    <form action="/shoppingCart" class="d-inline"></form>
                     <tbody class="align-middle">
                         {% for cart_product in cart_products %}
                         <tr>
@@ -53,13 +52,11 @@
                                 </div>
                             </td>
                             <td class="align-middle">{{cart_product.product.discount_price | floatformat:"2g"}}</td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+                            <td class="align-middle"><button class="btn btn-sm btn-primary" name="remove"><i class="fa fa-times"></i></button></td>
                         </tr>
                         {% endfor %}
                     </tbody>
-                    </form>
                 </table>
-                
             </div>
             <div class="col-lg-4">
                 <form class="mb-5" action="">

@@ -92,9 +92,12 @@ def contact(request):
     return render(request,'contact.html',data)
 class CustomerRegistrationView(View):
     def get(self,request):
+        message = request.GET.get('message')
+        if message is not None:
+            msg ="You haven't Register yet!!"
         products = Product.objects.all()
         form = CustomerRegistrationForm()
-        data = {'categories': categories,'products':products,'form':form}
+        data = {'categories': categories,'products':products,'form':form,'message':message}
         return render(request,'register.html',data)
     
     def post(self,request):

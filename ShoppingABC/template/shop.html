@@ -64,7 +64,11 @@
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
                                 <a href="/product-detail/{{product.product_slug}}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                {% if user.is_authenticated %}
                                 <a href="/shoppingCart/{{product.product_slug}}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                                {% else %}
+                                <a href="/registration/?message=You have to Register first!!" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                                {% endif%}
                             </div>
                         </div>
                     </div>
