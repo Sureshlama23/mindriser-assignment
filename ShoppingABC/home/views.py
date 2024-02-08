@@ -20,7 +20,7 @@ def home(request,slug=None):
         cart_objs_num = Cart.objects.filter(user=user).order_by('id')
     if slug != None:
         products = Product.objects.filter(category__category_name__icontains=slug)
-        mode='categoryproduct'
+        mode='productsonly'
     if request.method == 'GET':
         query = request.GET.get('product_name')
         if query is not None:
@@ -93,8 +93,6 @@ def contact(request):
 class CustomerRegistrationView(View):
     def get(self,request):
         message = request.GET.get('message')
-        if message is not None:
-            msg ="You haven't Register yet!!"
         products = Product.objects.all()
         form = CustomerRegistrationForm()
         data = {'categories': categories,'products':products,'form':form,'message':message}
