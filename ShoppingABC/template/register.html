@@ -1,14 +1,17 @@
 {% extends 'nav.html' %}
 {% block title %} Register {% endblock title %}
 {% block content %}
+        <!-- Customer Registration Form -->
                 <form action="" method="POST" novalidate class="shadow p-5">
                     {% for message in messages %}
                         <P{% if message.tags%} class="alert alert-{{message.tags}}" {% endif %}>{{message}}</P>
                     {% empty %}
                     {% endfor %}
+                    <!-- None login add to cart message to register -->
                     {% if message %}
                     <h3 class="alert-primary text-center">{{message}}</h3>
                     {% endif %}
+                    <!-- None login message end -->
                     {% csrf_token %}
                     {% for fm in form %}
                     <div class="form-group mb-3">
@@ -28,4 +31,5 @@
                     {% endfor %}
                     {% endif %}
                 </form>
+        <!-- Customer Registration Form end -->
 {% endblock content %}

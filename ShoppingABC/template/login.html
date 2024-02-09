@@ -1,7 +1,7 @@
 {% extends 'nav.html' %}
 {% block title %} Login {% endblock title %}
 {% block content %}
-
+    <!-- Login Form start -->
     <form action="" method="POST" novalidate class="shadow p-5">
         {% csrf_token %}
         {% for fm in form %}
@@ -27,6 +27,6 @@
         {% empty %}
         {% endfor %}
     </form>
-
+    <!-- Login Form end -->
 
 {% endblock content %}

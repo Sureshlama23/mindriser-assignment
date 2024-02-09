@@ -5,6 +5,7 @@ from .forms import CustomerRegistrationForm,CustomerForm
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.http import JsonResponse
 
 
 
@@ -54,7 +55,6 @@ class ShoppingCartView(View):
     subtotal = 0.00
     shipping_amount = 50
     Total_amount = 0.00
-    coupon = "10%-off"
     products = Product.objects.all()
     def get(self,request,slug=None):
         user = request.user
@@ -70,16 +70,55 @@ class ShoppingCartView(View):
                 cart_product_obj.save()
         # add to cart end
         
-        cart_products = [ p for p in Cart.objects.all() if request.user == user]
+        cart_products = [ p for p in Cart.objects.all() if p.user == user]
         if cart_products: 
             for p in cart_products:
                 temp_amount = (p.product.discount_price * p.quantity)
                 self.subtotal += temp_amount 
-                Total_amount = self.subtotal + self.shipping_amount
+                self.Total_amount = self.subtotal + self.shipping_amount
         cart_product = Cart.objects.filter(user=user)
         data = {'categories': categories,'products':self.products,'cart_products':cart_product,
-                    'subtotal':self.subtotal,'total_amount':Total_amount,'shipping_amount':self.shipping_amount}
+                    'subtotal':self.subtotal,'total_amount':self.Total_amount,'shipping_amount':self.shipping_amount}
         return render(request,'cart.html',data)  
+
+def cart_plus(request):
+    products = Product.objects.all()
+    if request.method == 'GET':
+        pro_id = request.GET['product_id']
+        print(pro_id)
+        c = Cart.objects.get(Q(product=pro_id) & Q(user=request.user))
+        c.quantity += 1
+        c.save()
+        subtotal = 0.00
+        shipping_amount = 50
+        Total_amount = 0.00
+        cart_product = Cart.objects.filter(user=request.user)
+        cart_pro = [ p for p in Cart.objects.all() if p.user == request.user]
+        if cart_pro: 
+            for p in cart_pro:
+                temp_amount = (p.product.discount_price * p.quantity)
+                subtotal += temp_amount 
+                Total_amount = subtotal + shipping_amount
+                print(subtotal)
+                print(Total_amount)
+        data = {'categories': categories,'products':products,'cart_products':cart_product,
+         'subtotal':subtotal,'total_amount':Total_amount,'shipping_amount':shipping_amount,'quantity':c.quantity}
+        return JsonResponse(data)
+
+def updateCart(request):
+    if request.method == "GET":
+        pro_id = int(request.GET.get('product_id'))
+        if(Cart.objects.filter(product__id=pro_id,user=request.user)):
+            cart = Cart.objects.get(Q(product__id=pro_id) & Q(user = request.user))
+            product_qty = int(request.GET.get('product_qty'))
+            cart.quantity = product_qty
+            cart.save()
+        return redirect('shoppingCart')
+    
+def cart_item_remove(request,id):
+    cart_obj = Cart.objects.filter(product__id=id)
+    cart_obj.delete()
+    return redirect('shoppingCart')
 
 def checkout(request):
     products = Product.objects.all()
@@ -91,7 +130,7 @@ def contact(request):
     data = {'categories': categories,'products':products} 
     return render(request,'contact.html',data)
 class CustomerRegistrationView(View):
-    def get(self,request):
+    def get(self,request): 
         message = request.GET.get('message')
         products = Product.objects.all()
         form = CustomerRegistrationForm()

@@ -19,7 +19,7 @@
     <!-- Cart Start -->
     {% if cart_products %}
     <div class="container-fluid pt-5">
-        <div class="row px-xl-5">
+        <div class="row px-xl-5 product_data">
             <div class="col-lg-8 table-responsive mb-5">
                 <table class="table table-bordered text-center mb-0">
                     <thead class="bg-secondary text-dark">
@@ -37,22 +37,26 @@
                             <td class="align-middle"><img src="{{cart_product.product.product_image.url}}" alt="" style="width: 50px;">{{cart_product.product.product_name | slice:":11"}}</td>
                             <td class="align-middle">{{cart_product.product.discount_price | floatformat:"2g"}}</td>
                             <td class="align-middle">
-                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                <div class="input-group quantity mx-auto product_data" style="width: 100px;">
+                                    {% if cart_product.quantity <= 10 %}
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-minus" >
+                                        <button class="btn btn-sm btn-primary btn-minus" pid="{{cart_product.product.id}}">
                                         <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" name="quantity" value="{{cart_product.quantity}}">
+                                    <input type="text" class="form-control form-control-sm bg -secondary text-center product_qty" id="quantity" value="{{cart_product.quantity}}">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus">
+                                        <button class="btn btn-sm btn-primary btn-plus" pid="{{cart_product.product.id}}">
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
+                                {% else %}
+                                <h6>Out Stock</h6>
+                                {% endif %}
                             </td>
                             <td class="align-middle">{{cart_product.product.discount_price | floatformat:"2g"}}</td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary" name="remove"><i class="fa fa-times"></i></button></td>
+                            <td class="align-middle"><a href="{% url 'item-remove' id=cart_product.product.id %}"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -74,7 +78,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium">Rs: {{subtotal | floatformat:"2g"}}</h6>
+                            <h6 class="font-weight-medium" ><span id="subtotal">Rs: {{subtotal | floatformat:"2g"}}</span></h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
@@ -84,7 +88,7 @@
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold">Rs: {{total_amount | floatformat:"2g"}}</h5>
+                            <h5 class="font-weight-bold"><span id="total">Rs: {{total_amount | floatformat:"2g"}}</span></h5>
                         </div>
                         <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
                     </div>

@@ -8,6 +8,8 @@
             <a class="nav-item nav-link {% if request.path == '/passwordchange/' %} btn-primary {% endif %}" href="{% url 'passwordchange' %}">Change Password</a>
         </nav>
     <!-- Account page navigation end -->
+
+    <!-- Customer Addresses -->
     <div class="container shadow p-5">
         <div class="row">
         {% for address in addresses %}
@@ -30,6 +32,7 @@
         </div>
 
     </div>
+    <!-- Customer Addresses end -->
 
 {% endblock content %}
 
