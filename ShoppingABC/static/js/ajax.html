@@ -1,0 +1,69 @@
+<script>  
+$(document).ready(function () {
+    // Quantity Increase ajax
+    $('.btn-plus').click(function (){
+        console.log('button clicked')
+        let productId = $(this).attr('pid');
+        let eml = $('#quantity');
+            console.log(productId);
+        $.ajax({
+            typeof: "GET",
+            url: "{% url 'pluscart'%}",
+            data: {
+                "productId":productId,
+            },
+            success: function (data) {
+                eml.val(data.quantity);
+                $('#subtotal').text(data.subtotal);
+                $('#total').text(data.total_amount);
+            }
+        });
+    });
+    // --------------
+
+    // Quantity decrease ajax
+    $('.btn-minus').click(function (){
+        console.log('button clicked')
+        let productId = $(this).attr('pid');
+        let eml = $('#quantity');
+            console.log(productId);
+        $.ajax({
+            typeof: "GET",
+            url: "{% url 'minuscart'%}",
+            data: {
+                "productId":productId,
+            },
+            success: function (data) {
+                eml.val(data.quantity);
+                $('#subtotal').text(data.subtotal);
+                $('#total').text(data.total_amount);
+                console.log(data);
+            }
+        });
+    });
+    // --------------
+
+    // Quantity decrease ajax
+    $('.remove-pro').click(function (){
+        console.log('button clicked')
+        let productId = $(this).attr('pid');
+        let eml = $('#quantity');
+            console.log(productId);
+        $.ajax({
+            typeof: "GET",
+            url: "{% url 'product-remove'%}",
+            data: {
+                "productId":productId,
+            },
+            success: function (data) {
+                eml.val(data.quantity);
+                $('#subtotal').text(data.subtotal);
+                $('#total').text(data.total_amount);
+                console.log(data);
+            }
+        });
+    });
+    // --------------
+    
+});
+</script> 

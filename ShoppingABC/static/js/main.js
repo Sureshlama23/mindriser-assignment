@@ -82,40 +82,31 @@
             }
         }
     });
-// Product Quantity
-// $('.changeQuantity').click(function(e){
-//     e.preventDefault();
 
-//     var product_id = $(this).closest('product_data').find('.product_id').val();
-//     var product_qty = $(this).closest('product_data').find('.qty-input').val();
-//     var token = $('input[name=csrfmiddlewaretoken]').val();
-//     $.ajax({
-//         type: "POST",
-//         url: "/cart-plus",
-//         data: {
-//             "product_id":product_id,
-//             "product_qty":product_qty,
-//             csrfmiddlewaretoken: token
-//         },
-//         success: function (response) {
+// document.getElementById('btn-ajax').addEventListener('click',makerequest);
+
+// function makerequest () {
+//     console.log("Button clicked")
+//     const xhr = new XMLHttpRequest();
+//     xhr.open('GET','https://jsonplaceholder.typicode.com/posts',true);
+//     xhr.responseType = "json";
+//     xhr.onload = function (){
+//     if(xhr.status === 200){
+//         console.log(xhr.response);
+//         x = xhr.response
+//         for(i=0; i<x.length; i++){
+//             console.log(x[i].userId);
+//             console.log(x[i].id);
+//             console.log(x[i].title);
+//             console.log(x[i].body);
 //         }
-//     });
-// })
-$('.btn-plus').click(function(){
-    console.log('pickclicked')
-    var id = $(this).attr("pid");
-    console.log(id);
-    $.ajax({
-        type: "GET",
-        url: "/cart-plus",
-        data: {product_id:id},
-        success: function (data) {
-            console.log(data);
-            console.log('success');
-            
-        }
-    });
-})
+//     }else{
+//         console.log("Problem Occured");
+//     }
+//     }
+//     xhr.send();
+// }
+
 
 })(jQuery);
 

@@ -32,32 +32,43 @@ def home(request,slug=None):
     return render(request,'index.html',data)
 class shopView(View):
     def get(self,request):
+        cart_objs_num = None
         products = Product.objects.all()
+        if request.user.is_authenticated:
+            user = request.user
+            cart_objs_num = Cart.objects.filter(user=user).order_by('id')
         if request.method == 'GET':
             query = request.GET.get('product_name')
             if query is not None:
                 multiple_query = Q(Q(product_name__icontains=query) | Q(brand__brand_name__icontains=query) | Q(category__category_name__icontains=query))
                 products = Product.objects.filter(multiple_query)
-        data = {'categories': categories,'products':products}
+        data = {'categories': categories,'products':products,'cart_objs_num':cart_objs_num}
         return render(request,'shop.html',data) 
 
 class productDetailView(View):
     def get(self,request,slug):
         product = None
+        cart_objs_num = None
+        if request.user.is_authenticated:
+            user = request.user
+            cart_objs_num = Cart.objects.filter(user=user).order_by('id')
         if slug is not None:
             product = Product.objects.get(product_slug=slug)
             mode = 'single_detail'
         data = {
-            'categories': categories,'product':product}
+            'categories': categories,'product':product,'cart_objs_num':cart_objs_num}
         return render(request,'detail.html',data)
 
 class ShoppingCartView(View):
     subtotal = 0.00
     shipping_amount = 50
-    Total_amount = 0.00
     products = Product.objects.all()
     def get(self,request,slug=None):
         user = request.user
+        cart_objs_num = None
+        if request.user.is_authenticated:
+            user = request.user
+            cart_objs_num = Cart.objects.filter(user=user).order_by('id')
         # add to cart
         if slug is not None:
             product_add_to_cart = Product.objects.get(product_slug=slug)
@@ -76,54 +87,84 @@ class ShoppingCartView(View):
                 temp_amount = (p.product.discount_price * p.quantity)
                 self.subtotal += temp_amount 
                 self.Total_amount = self.subtotal + self.shipping_amount
-        cart_product = Cart.objects.filter(user=user)
-        data = {'categories': categories,'products':self.products,'cart_products':cart_product,
-                    'subtotal':self.subtotal,'total_amount':self.Total_amount,'shipping_amount':self.shipping_amount}
+        cart_product = Cart.objects.all().filter(user=user)
+        data = {'categories': categories,'products':self.products,'cart_products':cart_product,'cart_objs_num':cart_objs_num,
+                    'subtotal':self.subtotal,'total_amount':self.subtotal+self.Total_amount,'shipping_amount':self.shipping_amount}
         return render(request,'cart.html',data)  
 
-def cart_plus(request):
-    products = Product.objects.all()
-    if request.method == 'GET':
-        pro_id = request.GET['product_id']
-        print(pro_id)
-        c = Cart.objects.get(Q(product=pro_id) & Q(user=request.user))
-        c.quantity += 1
-        c.save()
-        subtotal = 0.00
-        shipping_amount = 50
-        Total_amount = 0.00
-        cart_product = Cart.objects.filter(user=request.user)
-        cart_pro = [ p for p in Cart.objects.all() if p.user == request.user]
-        if cart_pro: 
-            for p in cart_pro:
+
+class plusCartView(View):
+    subtotal = 0.00
+    shipping_amount = 50
+    def get(self,request):
+        pro_id = request.GET.get('productId')
+        cart = Cart.objects.get(Q(product=pro_id) & Q(user=request.user))
+        cart.quantity += 1
+        cart.save()
+        cart_products = [ p for p in Cart.objects.all() if p.user == request.user]
+        if cart_products: 
+            for p in cart_products:
                 temp_amount = (p.product.discount_price * p.quantity)
-                subtotal += temp_amount 
-                Total_amount = subtotal + shipping_amount
-                print(subtotal)
-                print(Total_amount)
-        data = {'categories': categories,'products':products,'cart_products':cart_product,
-         'subtotal':subtotal,'total_amount':Total_amount,'shipping_amount':shipping_amount,'quantity':c.quantity}
+                self.subtotal += temp_amount 
+        data = {"quantity":cart.quantity,'subtotal':self.subtotal,'total_amount':self.subtotal + self.shipping_amount}
         return JsonResponse(data)
 
-def updateCart(request):
-    if request.method == "GET":
-        pro_id = int(request.GET.get('product_id'))
-        if(Cart.objects.filter(product__id=pro_id,user=request.user)):
-            cart = Cart.objects.get(Q(product__id=pro_id) & Q(user = request.user))
-            product_qty = int(request.GET.get('product_qty'))
-            cart.quantity = product_qty
-            cart.save()
-        return redirect('shoppingCart')
+class minusCartView(View):
+    subtotal = 0.00
+    shipping_amount = 50
+    def get(self,request):
+        pro_id = request.GET.get('productId')
+        cart = Cart.objects.get(Q(product=pro_id) & Q(user=request.user))
+        cart.quantity -= 1
+        cart.save()
+        cart_products = [ p for p in Cart.objects.all() if p.user == request.user]
+        if cart_products: 
+            for p in cart_products:
+                temp_amount = (p.product.discount_price * p.quantity)
+                self.subtotal += temp_amount 
+        data = {"quantity":cart.quantity,'subtotal':self.subtotal,'total_amount':self.subtotal + self.shipping_amount}
+        return JsonResponse(data)
     
-def cart_item_remove(request,id):
-    cart_obj = Cart.objects.filter(product__id=id)
-    cart_obj.delete()
-    return redirect('shoppingCart')
+def cartProductRemove(request):
+    subtotal = 0.00
+    shipping_amount = 50
+    if request.method == 'GET':
+        pro_id = request.GET['productId']
+        cart = Cart.objects.get(Q(product=pro_id) & Q(user=request.user))
+        cart.delete()
+        cart_products = [ p for p in Cart.objects.all() if p.user == request.user]
+        if cart_products: 
+            for p in cart_products:
+                temp_amount = (p.product.discount_price * p.quantity)
+                subtotal += temp_amount 
+        data = {"quantity":None,'subtotal':subtotal,'total_amount':subtotal + shipping_amount}
+        return JsonResponse(data)
 
 def checkout(request):
     products = Product.objects.all()
-    data = {'categories': categories,'products':products}
-    return render(request,'checkout.html',data)
+    if request.method == 'GET':
+        subtotal = 0.00
+        shipping_amount = 50
+        total_quantity = 0
+        address = Customer.objects.filter(user=request.user)
+        carts = Cart.objects.filter(user=request.user).order_by('id')
+        cart_products = [ p for p in Cart.objects.all() if p.user == request.user]
+        if cart_products: 
+            for p in cart_products:
+                total_quantity += p.quantity
+            for p in cart_products:
+                temp_amount = (p.product.discount_price * p.quantity)
+                subtotal += temp_amount 
+        data = {'categories': categories,'products':products,'carts':carts,'total_amount':subtotal + shipping_amount,
+                "quantity":None,'subtotal':subtotal,'address':address,'shipping_amount':shipping_amount,'total_quantity':total_quantity}
+        return render(request,'checkout.html',data)
+
+class paymentDoneView(View):
+    def get(self,request):
+        user = request.user
+        custId = request.GET['custmoerId']
+        customer = Customer.objects.get(id=custId)
+        cart = Cart.objects.get(user=user)
 
 def contact(request):
     products = Product.objects.all()
