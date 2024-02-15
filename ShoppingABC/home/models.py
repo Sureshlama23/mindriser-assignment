@@ -63,9 +63,18 @@ class Cart(models.Model):
     def total_cost(self):
         return self.quantity * self.product.discount_price
 
+STATUS_CHOICES = (
+    ('Accepted','Accepted'),
+    ('Packed','Packed'),
+    ('On the Way','On the Way'),
+    ('Delivered','Delivered'),
+    ('Cancel','Cancel'),
+
+)
 class OrderPlaced(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='order_user')
     customer = models.ForeignKey(Customer,on_delete=models.CASCADE,related_name='order_customer')
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='order_product')
     quantity = models.PositiveIntegerField(default=1)
     ordered_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50,choices=STATUS_CHOICES,default='Pending')

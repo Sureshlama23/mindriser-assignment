@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Category,Product,Customer,Cart
+from .models import Category,Product,Customer,Cart,OrderPlaced
 from django.views import View
 from .forms import CustomerRegistrationForm,CustomerForm
 from django.db.models import Q
@@ -89,7 +89,7 @@ class ShoppingCartView(View):
                 self.Total_amount = self.subtotal + self.shipping_amount
         cart_product = Cart.objects.all().filter(user=user)
         data = {'categories': categories,'products':self.products,'cart_products':cart_product,'cart_objs_num':cart_objs_num,
-                    'subtotal':self.subtotal,'total_amount':self.subtotal+self.Total_amount,'shipping_amount':self.shipping_amount}
+                    'subtotal':self.subtotal,'total_amount':self.subtotal+self.shipping_amount,'shipping_amount':self.shipping_amount}
         return render(request,'cart.html',data)  
 
 
@@ -164,7 +164,16 @@ class paymentDoneView(View):
         user = request.user
         custId = request.GET['custmoerId']
         customer = Customer.objects.get(id=custId)
-        cart = Cart.objects.get(user=user)
+        carts = Cart.objects.filter(user=user)
+        print(carts)
+        for c in carts:
+            OrderPlaced(user=user,customer=customer,product=c.product,quantity=c.quantity).save()
+            c.delete()
+        return redirect('orders')
+def orders(request):
+    order = OrderPlaced.objects.filter(user=request.user)
+    data = {'orders':order,}
+    return render(request,'orders.html',data)
 
 def contact(request):
     products = Product.objects.all()

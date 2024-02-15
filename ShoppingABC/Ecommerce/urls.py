@@ -36,6 +36,7 @@ urlpatterns = [
     path('product-remove/',views.cartProductRemove,name="product-remove"),
     path('checkout/',views.checkout,name='checkout'),
     path('paymentdone/',views.paymentDoneView.as_view(),name='paymentdone'),
+    path('orders/',views.orders,name='orders'),
     path('contact/',views.contact,name='contact'),
     path('registration/',views.CustomerRegistrationView.as_view(),name='customer-registration'),
     path('registration/<slug:slug>',views.CustomerRegistrationView.as_view(),name='customer-registration'),
