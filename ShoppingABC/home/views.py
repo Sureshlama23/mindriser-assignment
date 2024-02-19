@@ -158,16 +158,17 @@ def checkout(request):
         data = {'categories': categories,'products':products,'carts':carts,'total_amount':subtotal + shipping_amount,
                 "quantity":None,'subtotal':subtotal,'address':address,'shipping_amount':shipping_amount,'total_quantity':total_quantity}
         return render(request,'checkout.html',data)
-
 class paymentDoneView(View):
     def get(self,request):
         user = request.user
-        custId = request.GET['custmoerId']
+        custId = request.GET.get('customerID')
+        print(custId)
         customer = Customer.objects.get(id=custId)
         carts = Cart.objects.filter(user=user)
         print(carts)
         for c in carts:
-            OrderPlaced(user=user,customer=customer,product=c.product,quantity=c.quantity).save()
+            order = OrderPlaced(user=user,customer=customer,product=c.product,quantity=c.quantity)
+            order.save()
             c.delete()
         return redirect('orders')
 def orders(request):
@@ -198,9 +199,10 @@ class CustomerRegistrationView(View):
     
 class ProfileView(View):
     def get(self,request):
+        order = OrderPlaced.objects.filter(user=request.user)
         products = Product.objects.all()
         form =CustomerForm()
-        data = {'categories': categories,'products':products,'form':form}
+        data = {'categories': categories,'products':products,'form':form,'order':order}
         return render(request,'profile.html',data)
     def post(self,request):
         form = CustomerForm(request.POST)

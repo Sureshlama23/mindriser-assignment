@@ -18,7 +18,7 @@
 
     <!-- Checkout Start -->
     <div class="container-fluid pt-5">
-        <form action="/paymentdone">
+        <form action="/paymentdone/">
         <div class="row px-xl-5">
             <div class="col-lg-8">
                 <div class="mb-4">
@@ -29,7 +29,7 @@
                             <label>{{add.name}},{{add.locality}},{{add.city}},{{zipcode}},{{add.number}},{{add.state}}</label>
                         </div>
                         <div class="form-check-label mt-2 mb-5">
-                                <input type="radio" class="form-check-input" name="custmoerId" id="custadd{{forloop.counter}}" value="{{add.id}}">
+                                <input type="radio" class="form-check-input" name="customerID" id="custadd{{forloop.counter}}" value="{{add.id}}" required>
                                 <label class="form-check-label fw-bold" >Address {{forloop.counter}}</label>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
-                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</button>
+                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" type="submit">Place Order</button>
                     </div>
                 </div>
             </div>

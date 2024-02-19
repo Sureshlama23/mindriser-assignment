@@ -65,10 +65,13 @@
                             </button>
                         </div>
                     </div>
-
+                    {% if request.user.is_authenticated %}
                     <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> <a href="
-                        {% if request.user.authenticated %}/shoppingCart/{{product.product_slug}}
-                        {% else%}/registration/?message=You have to Register first!!{{message}}{% endif %}">Add To Cart</a></button>
+                       /shoppingCart/{{product.product_slug}}">Add To Cart</a></button>
+                    {% else %}
+                        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> <a href="
+                            /registration/?message=You have to Register first!!{{message}}">Add To Cart</a></button>
+                    {% endif %}
                 </div>
                 <div class="d-flex pt-2">
                     <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>

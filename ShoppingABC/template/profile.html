@@ -4,6 +4,7 @@
     <!-- Account page navigation-->
         <nav class="nav nav-borders">
             <a class="nav-item nav-link {% if request.path == '/profile/' %} btn-primary {% endif %}" href="{% url 'profile' %}">Profile</a>
+            <a class="nav-item nav-link {% if request.path == '/orders/' %} btn-primary {% endif %}" href="{% url 'orders' %}">Orders</a>
             <a class="nav-item nav-link {% if request.path == '/address/' %} btn-primary {% endif %}" href="{% url 'address' %}">Address</a>
             <a class="nav-item nav-link {% if request.path == '/passwordchange/' %} btn-primary {% endif %}" href="{% url 'passwordchange' %}">Change Password</a>
         </nav>
