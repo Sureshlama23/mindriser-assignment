@@ -14,7 +14,6 @@ from django.utils.decorators import method_decorator
 categories = Category.objects.all
 
 # Create your views here.
-
 def home(request,slug=None):
     products = Product.objects.all()
     mode = None
@@ -61,7 +60,7 @@ class productDetailView(View):
         data = {
             'categories': categories,'product':product,'cart_objs_num':cart_objs_num}
         return render(request,'detail.html',data)
-@method_decorator(login_required='dispatch')
+
 class ShoppingCartView(View):
     subtotal = 0.00
     shipping_amount = 50
@@ -95,7 +94,7 @@ class ShoppingCartView(View):
                     'subtotal':self.subtotal,'total_amount':self.subtotal+self.shipping_amount,'shipping_amount':self.shipping_amount}
         return render(request,'cart.html',data)  
 
-@method_decorator(login_required='dispatch')
+
 class plusCartView(View):
     subtotal = 0.00
     shipping_amount = 50
@@ -112,7 +111,6 @@ class plusCartView(View):
         data = {"quantity":cart.quantity,'subtotal':self.subtotal,'total_amount':self.subtotal + self.shipping_amount}
         return JsonResponse(data)
 
-@method_decorator(login_required='dispatch')
 class minusCartView(View):
     subtotal = 0.00
     shipping_amount = 50
@@ -128,8 +126,7 @@ class minusCartView(View):
                 self.subtotal += temp_amount 
         data = {"quantity":cart.quantity,'subtotal':self.subtotal,'total_amount':self.subtotal + self.shipping_amount}
         return JsonResponse(data)
-
-@login_required 
+    
 def cartProductRemove(request):
     subtotal = 0.00
     shipping_amount = 50
@@ -145,7 +142,7 @@ def cartProductRemove(request):
         data = {"quantity":None,'subtotal':subtotal,'total_amount':subtotal + shipping_amount}
         return JsonResponse(data)
 
-@login_required
+
 def checkout(request):
     products = Product.objects.all()
     if request.method == 'GET':
@@ -164,8 +161,6 @@ def checkout(request):
         data = {'categories': categories,'products':products,'carts':carts,'total_amount':subtotal + shipping_amount,
                 "quantity":None,'subtotal':subtotal,'address':address,'shipping_amount':shipping_amount,'total_quantity':total_quantity}
         return render(request,'checkout.html',data)
-    
-@method_decorator(login_required='dispatch')
 class paymentDoneView(View):
     def get(self,request):
         user = request.user
@@ -179,7 +174,6 @@ class paymentDoneView(View):
             order.save()
             c.delete()
         return redirect('orders')
-@login_required
 def orders(request):
     order = OrderPlaced.objects.filter(user=request.user)
     data = {'orders':order,}
@@ -206,7 +200,6 @@ class CustomerRegistrationView(View):
         data = {'categories': categories,'products':products,'form':form}
         return render(request,'register.html',data)
     
-@method_decorator(login_required='dispatch')
 class ProfileView(View):
     def get(self,request):
         order = OrderPlaced.objects.filter(user=request.user)
@@ -231,7 +224,6 @@ class ProfileView(View):
             messages.error(request,'Profile Update remain same')
         return render(request,'profile.html')
 
-@method_decorator(login_required='dispatch')
 class AddressView(View):
     def get(self,request):
         address = Customer.objects.filter(user=request.user)
