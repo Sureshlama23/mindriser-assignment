@@ -213,7 +213,7 @@ class OrderPlacedView(ModelViewSet):
                 data = {'cart':c.uid,'seller':c.product.seller.uid,'buyer':address_uid,'product':c.product.uid,'quantity':c.quantity,'subtotal':shipping_fee + subtotal}
                 serializer = OrderedPlacedSerializer(data=data)
                 if serializer.is_valid():
-                     order = serializer.save()
+                     serializer.save()
                 else:
                      return Response(serializer.errors)
              cart.delete()

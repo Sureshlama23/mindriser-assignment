@@ -3,12 +3,6 @@ from base.models import BaseModel
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
 
-USER_TYPE = (
-    ('buyer','buyer'),
-    ('seller','seller'),
-    ('Owner','Owner'),
-    
-)
 # Create your models here.
 class User(AbstractUser,BaseModel):
     username = models.CharField(max_length=100)

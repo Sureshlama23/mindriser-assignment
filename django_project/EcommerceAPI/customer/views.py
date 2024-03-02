@@ -95,7 +95,6 @@ class PaymentOrderview(ModelViewSet):
         orders = Orders.objects.filter(query)
         print(orders)
         amount = sum(order.subtotal for order in orders)
-        print(amount)
         if payment_amount == amount:
             for order in orders:
                 order.payment_status= 'Done'
