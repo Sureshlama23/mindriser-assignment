@@ -120,7 +120,6 @@ class ProductRetriveUpdate(ModelViewSet):
              user = User.objects.get(email=email)
              shop_uid = shopDetail.objects.get(user_email=email)
              pro = Product.objects.get(Q(seller=shop_uid) & Q(product_slug=slug))
-             print(pro)
              pro_obj = Product.objects.get(product_slug=slug)
              serializer = self.serializer_class(pro_obj,data=request.data,partial=True)
              if serializer.is_valid():

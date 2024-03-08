@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from .models import User
 from django.contrib.auth.models import Group
-from .serializers import UserSerializer,GroupSerializer
+from rest_framework.viewsets import ModelViewSet
+from .serializers import UserSerializer,GroupSerializer,changePasswordSerializer
 from rest_framework.generics import CreateAPIView
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes,api_view
 from rest_framework.permissions import AllowAny,IsAdminUser
@@ -74,3 +75,42 @@ def GroupList(request):
     group_obj = Group.objects.all().exclude(name='Owner')
     serializer = GroupSerializer(group_obj,many=True)
     return Response(serializer.data)
+
+class PasswordReset(ModelViewSet):
+    pass
+
+# Change Password
+class ChangePasswordView(ModelViewSet):
+    """
+    An endpoint for changing password.
+    """
+    serializer_class = changePasswordSerializer
+    model = User
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        self.object = self.get_object()
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not self.object.check_password(old_password):
+                return Response({'error': 'Old password does not match'}, status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(new_password)
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
