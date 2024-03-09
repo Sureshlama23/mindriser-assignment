@@ -1,19 +1,25 @@
 from django.shortcuts import render
+from django.urls import reverse
 from .models import User
 from django.contrib.auth.models import Group
 from rest_framework.viewsets import ModelViewSet
-from .serializers import UserSerializer,GroupSerializer,changePasswordSerializer
+from .serializers import UserSerializer,GroupSerializer,changePasswordSerializer,EmailSerialzier,PasswordResetSerializer
 from rest_framework.generics import CreateAPIView
-from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password,check_password
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes,api_view
 from rest_framework.permissions import AllowAny,IsAdminUser
 from rest_framework import status
 from django.contrib.auth import authenticate
+from base64 import urlsafe_b64encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode
 
 
 # Create your views here.
+
+#New registration function
 class Registration(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -37,7 +43,8 @@ class Registration(CreateAPIView):
                 return Response(serializer.errors)
         except:
             return Response({"error": "Value missing"},status=status.HTTP_406_NOT_ACCEPTABLE)
-        
+
+#User login function      
 @api_view(['POST'])
 @permission_classes([AllowAny])       
 def login(request):
@@ -49,7 +56,8 @@ def login(request):
     else:
         return Response({"error": "Invalid Credentials"},status=status.HTTP_400_BAD_REQUEST)
 
-        
+
+# Owner Create fuction
 class OwnerCreate(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -70,16 +78,14 @@ class OwnerCreate(CreateAPIView):
         else:
             return Response(serializer.errors)
 
+# Group list ceck function
 @api_view(['GET']) 
 def GroupList(request):
     group_obj = Group.objects.all().exclude(name='Owner')
     serializer = GroupSerializer(group_obj,many=True)
     return Response(serializer.data)
 
-class PasswordReset(ModelViewSet):
-    pass
-
-# Change Password
+# Change Password function
 class ChangePasswordView(ModelViewSet):
     """
     An endpoint for changing password.
@@ -114,3 +120,38 @@ class ChangePasswordView(ModelViewSet):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Forgot password reset function
+class PasswordResetView(ModelViewSet):
+    serializer_class = EmailSerialzier
+    permission_classes = [AllowAny]
+
+    def create(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            email = serializer.data.get('email')
+            user = User.objects.filter(email=email).first()
+            if user:
+                encoded_pk = urlsafe_base64_encode(force_bytes(user.pk))
+                token = PasswordResetTokenGenerator().make_token(user)
+                # Url: localhost:8000//reset-password/<encoded_pk>/<token>/
+                reset_url = reverse(
+                    "password-reset",
+                    kwargs = {'encoded_pk':encoded_pk,'token':token}
+                )
+                reset_url = f"localhost:8000{reset_url}"
+                return Response({'message': f"Your password reset link is {reset_url}"})
+            else:
+                return Response({'error': 'User does not exists'},status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors)
+        
+class PasswordResetConfirm(ModelViewSet):
+    serializer_class = PasswordResetSerializer
+
+    def partial_update(self,request,*args, **kwargs):
+        serializer = self.serializer_class(data=request.data,context={'kwargs':kwargs})
+        if serializer.is_valid():
+            return Response({'message': 'Your password reset complete'},status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors)
