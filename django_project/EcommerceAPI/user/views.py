@@ -18,7 +18,7 @@ from django.core.mail import send_mail
 from EcommerceAPI import settings
 import random
 import datetime
-from .tasks import email_verify_otp
+from .tasks import email_verify_otp,password_reset_task
 # Create your views here.
 
 #New registration function
@@ -83,7 +83,7 @@ class OwnerCreate(CreateAPIView):
         else:
             return Response(serializer.errors)
 
-# Group list ceck function
+# Group list check function
 @api_view(['GET']) 
 def GroupList(request):
     group_obj = Group.objects.all().exclude(name='Owner')
@@ -144,8 +144,11 @@ class PasswordResetView(ModelViewSet):
                     "password-reset",
                     kwargs = {'encoded_pk':encoded_pk,'token':token}
                 )
-                reset_url = f"localhost:8000{reset_url}"
-                return Response({'message': f"Your password reset link is {reset_url}"})
+                # Here you can add website url
+                reset_url = f"http://127.0.0.1:8000/{reset_url}"
+                detail = {'username':user.username,'email': user.email,'reset_url': reset_url}
+                password_reset_task.delay(detail)
+                return Response({'message': 'Check your email to reset password','url':reset_url})
             else:
                 return Response({'error': 'User does not exists'},status=status.HTTP_400_BAD_REQUEST)
         else:
