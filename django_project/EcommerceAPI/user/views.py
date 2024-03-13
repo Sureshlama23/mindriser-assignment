@@ -11,12 +11,14 @@ from rest_framework.decorators import permission_classes,api_view
 from rest_framework.permissions import AllowAny,IsAdminUser
 from rest_framework import status
 from django.contrib.auth import authenticate
-from base64 import urlsafe_b64encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
-
-
+from django.core.mail import send_mail
+from EcommerceAPI import settings
+import random
+import datetime
+from .tasks import email_verify_otp
 # Create your views here.
 
 #New registration function
@@ -24,25 +26,28 @@ class Registration(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
-
-    def create(self,request):
-        try:
-            username = request.data.get('username')
-            email = request.data.get('email')
-            password = request.data.get('password')
-            group_id= request.data.get('group')
-            group_obj = Group.objects.get(id=group_id)
-            hash_password = make_password(password)
-            serializer = UserSerializer(data=request.data)
-            if serializer.is_valid():
+    
+    def create(self,request):     
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        group_id= request.data.get('group')
+        group_obj = Group.objects.filter(id=group_id).first()
+        hash_password = make_password(password)
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            if group_obj:
                 user = User.objects.create(username=username,email=email,password=hash_password)
                 user.groups.add(group_obj)
                 user.save()
+                user_data = {'user':username,'email':email}
+                email_verify_otp.delay(user_data)
                 return Response({'message':'User registration successfull'},status=status.HTTP_201_CREATED)
             else:
-                return Response(serializer.errors)
-        except:
-            return Response({"error": "Value missing"},status=status.HTTP_406_NOT_ACCEPTABLE)
+                return Response({'error': 'Group does not exit'},status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors)
+    
 
 #User login function      
 @api_view(['POST'])

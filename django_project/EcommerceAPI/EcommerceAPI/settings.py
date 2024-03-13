@@ -148,9 +148,28 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100
 }
 
-# Celery settings
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TASK_SERIALZIER = 'json'
-# CELERY_TIMEZONE = 'Asia/Kathmandu'
+#  Celery settings
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kathmandu'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_EXTENDED = True
+
+# Celery beat settings
+
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+# reyb lmwi lqzb rdpr
+# SMTP Settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sureshlama275@gmail.com'
+EMAIL_HOST_PASSWORD = 'reyb lmwi lqzb rdpr'
+DEFAULT_FROM_EMAIL = 'Celery Testing<sureshlama275@gmail.com>'

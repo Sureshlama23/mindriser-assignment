@@ -8,7 +8,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['username','email','password']
 
     def validate(self,data):
         # Password Strength validation
