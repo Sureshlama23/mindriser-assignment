@@ -35,7 +35,7 @@ Dear {username},
 
 We have received a request to reset the password for your account. To initiate the password reset process, please click on the link below:
 
-{[reset_url]}
+{reset_url}
 
 Please note that this link is valid for a limited time and can only be used once. If you did not request this password reset, you can safely ignore this email. Your account security is important to us, so please do not share this link with anyone.
 
